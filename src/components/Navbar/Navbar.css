@@ -1,0 +1,14 @@
+.paste-button {
+    position: relative;
+    display: flex;
+  }
+  
+  .dropdown-content {
+    display: block;
+    position: absolute;
+    top: 110%;
+    right: 0%;
+    z-index: 1;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  }
