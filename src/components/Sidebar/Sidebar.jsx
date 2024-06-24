@@ -20,13 +20,13 @@ const Sidebar = ({ onItemClick, selectedComponent }) => {
   return (
     <div className="flex flex-col justify-between h-[100vh] pb-4 ">
       <div>
-        <Link to={"/"} className="flex pl-4 w-full py-4 cursor-pointer">
+        <Link to={"/dashboard"} className="flex pl-4 w-full py-4 cursor-pointer">
           <img className="w-[55%]" src={Logo} alt="" />
         </Link>
         <div className="flex flex-col gap-2 px-4 w-full font-int text-[#808080] text-[14px]">
           <Link
-            to={"dashboard"}
-            onClick={() => onItemClick("dashboard")}
+            to={"/dashboard"}
+            onClick={() => onItemClick("/dashboard")}
             className={`flex items-center gap-4 cursor-pointer  px-4 py-4 rounded-lg ${
               location.pathname === "/dashboard"
                 ? "bg-[#7F7F7F] text-white"

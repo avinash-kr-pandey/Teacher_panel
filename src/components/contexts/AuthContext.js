@@ -1,25 +1,29 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    // Initialize isAuthenticated from localStorage if available
-    return localStorage.getItem('isAuthenticated') === 'true';
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Function to set isAuthenticated state and localStorage
-  const setAuthStatus = (status) => {
-    setIsAuthenticated(status);
-    localStorage.setItem('isAuthenticated', status.toString());
-  };
+  useEffect(() => {
+    const token = localStorage.getItem('teachertoken');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
-  const login = () => {
-    setAuthStatus(true);
+  const login = (token) => {
+    localStorage.setItem('teachertoken', token);
+    setIsAuthenticated(true);
   };
 
   const logout = () => {
-    setAuthStatus(false);
+    localStorage.removeItem('teachertoken');
+    setIsAuthenticated(false);
   };
 
   return (
@@ -28,5 +32,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

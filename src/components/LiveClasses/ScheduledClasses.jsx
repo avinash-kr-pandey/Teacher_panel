@@ -59,7 +59,7 @@ const ScheduledClasses = () => {
 
   return (
     <div>
-      <h2>Scheduled Classes</h2>
+      {/* <h2>Scheduled Classes</h2> */}
       <div className="grid grid-cols-3 gap-5 gap-y-8">
         {scheduledClasses.map((classInfo) => (
           <LiveClassCard
