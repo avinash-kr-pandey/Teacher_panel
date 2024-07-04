@@ -3,7 +3,7 @@ import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { IoMdDownload } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
-import { FaFilePdf, FaVideo } from "react-icons/fa";
+import { FaFilePdf, FaVideo, FaVolumeUp } from "react-icons/fa"; // Added FaVolumeUp for audio icon
 import "./CourseMedia.css";
 import Loader from "../Loader/Loader";
 import { IoSearchOutline } from "react-icons/io5";
@@ -19,6 +19,7 @@ const Media = ({ onImageSelect }) => {
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
   const [pdfs, setPdfs] = useState([]);
+  const [audios, setAudios] = useState([]); // State for audio files
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("images");
   const [mediaData, setMediaData] = useState([]);
@@ -40,8 +41,6 @@ const Media = ({ onImageSelect }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response);
-
       setIsLoading(false);
       if (response.data.success) {
         const mediaData = response.data.mediaFiles;
@@ -58,9 +57,13 @@ const Media = ({ onImageSelect }) => {
         const pdfFiles = mediaData.filter((media) =>
           media.url.endsWith(".pdf")
         );
+        const audioFiles = mediaData.filter((media) =>
+          media.url.endsWith(".mp3") // Adjust extension based on your audio file types
+        );
         setImages(imageFiles);
         setVideos(videoFiles);
         setPdfs(pdfFiles);
+        setAudios(audioFiles);
       } else {
         toast.error("Error fetching media.");
         console.error("Error fetching media:", response.data);
@@ -109,8 +112,6 @@ const Media = ({ onImageSelect }) => {
           },
         }
       );
-      console.log(response);
-
       setIsLoading(false);
       if (response.data.success) {
         fetchData(storedToken); // Refresh data after upload
@@ -167,13 +168,21 @@ const Media = ({ onImageSelect }) => {
     setIsModalOpen(false);
   };
 
+  const playVideo = (videoUrl) => {
+    window.open(videoUrl, "_blank");
+  };
+
+  const playAudio = (audioUrl) => {
+    // Handle audio playback here
+  };
+
   const tabsData = [
     {
       id: "images",
-      title: "Image",
+      title: "Images",
       content: (
         <div style={{ flex: 1 }}>
-          <div className="grid grid-cols-4 gap-3 justify-center overflow-x-auto mx-3 ">
+          <div className="grid grid-cols-4 gap-3 justify-center overflow-x-auto mx-3">
             {images.map((media, index) => (
               <div
                 key={index}
@@ -192,7 +201,7 @@ const Media = ({ onImageSelect }) => {
                 <span>{media.title}</span>
                 {/* Delete Icon */}
                 <button
-                  className="delete-icon "
+                  className="delete-icon"
                   onClick={() => deleteMedia(media.key)}
                 >
                   <MdDelete className="h-5 w-5" style={{ color: "red" }} />
@@ -211,27 +220,32 @@ const Media = ({ onImageSelect }) => {
           <div className="grid grid-cols-3 gap-3 mx-3 overflow-scroll">
             {videos
               .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-              .map((media, index) => (
-                <div
-                  key={index}
-                  className="flex flex-row items-center gap-2 media-item-container shadow-md p-3"
-                >
-                  <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoO_pzRocf2o-U4hA2BD_-uP5-t9e-DUo3fg&s"
-                    alt=""
-                    className="w-[50px] h-[50px]"
-                  />
-                  {/* <FaVideo className="text-6xl text-blue-600" /> */}
-                  <span>{media.title}</span>
-                  {/* Delete Icon */}
-                  <button
-                    className="delete-icon"
-                    onClick={() => deleteMedia(media.key)}
-                  >
-                    <MdDelete className="h-5 w-5" style={{ color: "red" }} />
-                  </button>
-                </div>
-              ))}
+              .map((media, index) => {
+                const videoName = media.title.split("/").pop(); // Extracts the file name from the path
+
+                return (
+                  <div key={index} className="card">
+                    <div className="card-image-container relative">
+                      <FaVideo className="video-icon" />
+
+                      <button
+                        className="delete-icon absolute top-2 right-2"
+                        onClick={() => deleteMedia(media.key)}
+                      >
+                        <MdDelete className="h-5 w-5 text-red-600" />
+                      </button>
+                    </div>
+                    <p className="card-title">{videoName}</p>
+                    <div
+                      className="card-btn flex items-center cursor-pointer"
+                      onClick={() => playVideo(media.url)} // Function to play video
+                    >
+                      <FaVolumeUp className="audio-icon" />
+                      <span className="card-btn-text ml-2">Watch Video</span>
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         </div>
       ),
@@ -241,23 +255,61 @@ const Media = ({ onImageSelect }) => {
       title: "PDF",
       content: (
         <div style={{ flex: 1 }} className="pl-3">
-          <div className="grid grid-cols-3 gap-3 mx-3 overflow-scroll">
+          <div className="box grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-3 overflow-scroll">
             {pdfs
               .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
               .map((media, index) => (
                 <div
                   key={index}
-                  className="flex flex-row items-center gap-2 media-item-container"
+                  className="flex flex-col items-start p-4 bg-white shadow-lg rounded-lg media-item-container"
                 >
-                  <FaFilePdf className="text-6xl text-red-600" />
-                  <span>{media.title}</span>
-                  {/* Delete Icon */}
-                  <button
-                    className="delete-icon"
-                    onClick={() => deleteMedia(media.key)}
+                  <div className="flex items-center w-full gap-2">
+                    <FaFilePdf className="text-3xl text-red-600" />
+                    <span className="truncate">{media.title}</span>
+                    <button
+                      className="delete-icon ml-auto"
+                      onClick={() => deleteMedia(media.key)}
+                    >
+                      <MdDelete
+                        className="h-5 w-5"
+                        style={{ color: "red" }}
+                      />
+                    </button>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "audio",
+      title: "Audio",
+      content: (
+        <div style={{ flex: 1 }} className="pl-3">
+          <div className="grid grid-cols-3 gap-3 mx-3 overflow-scroll">
+            {audios
+              .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+              .map((media, index) => (
+                <div key={index} className="card">
+                  <div className="card-image-container relative">
+                    <FaVolumeUp className="audio-icon" />
+
+                    <button
+                      className="delete-icon absolute top-2 right-2"
+                      onClick={() => deleteMedia(media.key)}
+                    >
+                      <MdDelete className="h-5 w-5 text-red-600" />
+                    </button>
+                  </div>
+                  <p className="card-title">{media.title}</p>
+                  <div
+                    className="card-btn flex items-center cursor-pointer"
+                    onClick={() => playAudio(media.url)} // Function to play audio
                   >
-                    <MdDelete className="h-5 w-5" style={{ color: "red" }} />
-                  </button>
+                    <FaVolumeUp className="audio-icon" />
+                    <span className="card-btn-text ml-2">Play Audio</span>
+                  </div>
                 </div>
               ))}
           </div>
