@@ -25,13 +25,14 @@ const Router = () => {
           <Route
             path="/"
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
                 <TPHome />
                 
-              </ProtectedRoute>
+              // </ProtectedRoute>
             }
           >
             {/* <Route index element={<TPHome />} /> */}
+            <Route index element={<Dashboard />} />
             <Route path='dashboard' element={<Dashboard />} />
             <Route path="liveclass" element={<LiveClasses />} />
             <Route path="addcourse" element={<AddCourses />} />

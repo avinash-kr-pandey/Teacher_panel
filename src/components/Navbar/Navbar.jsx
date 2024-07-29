@@ -3,10 +3,10 @@ import bell from "../../Assets/Icons/tpbell.svg";
 import Profile from "../../Assets/Icons/tpprofile.svg";
 import Arrow from "../../Assets/Icons/tparrow.svg";
 import ProfilePurple from "../../Assets/Icons/tpnavbarprofile.svg";
-import Logout from "../../Assets/Icons/tplogoutred.svg";
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../Api/api";
+import { jwtDecode } from "jwt-decode";
 
 const Navbar = ({}) => {
   const navigate = useNavigate();
@@ -24,32 +24,46 @@ const Navbar = ({}) => {
   function handleShowMenu() {
     setShowMenu(!showMenu);
   }
-
+  function Logout(){
+    try {
+        let token=localStorage.getItem('teachertoken')
+        if(token){
+            localStorage.removeItem('teachertoken')
+navigate('/login')
+        }
+    } catch (error) {
+        console.log(error);
+    }
+  }
   useEffect(() => {
     const fetchInstructorDetails = async () => {
-      const email = "dummy@gmail.com"; // Replace with the dynamic email as needed
+      // const email = "dummy@gmail.com"; // Replace with the dynamic email as needed
       const token = localStorage.getItem("teachertoken");
-
-      try {
-        const response = await fetch(`${BASE_URL}/inst/${email}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch instructor details");
+      if(token){
+        let email=jwtDecode(token)?.email
+        try {
+          const response = await fetch(`${BASE_URL}/inst/${email}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error("Failed to fetch instructor details");
+          }
+  
+          const data = await response.json();
+          setInstructor(data?.instructorDetails);
+        } catch (error) {
+          console.error("Error fetching instructor details:", error);
+        } finally {
+          setLoading(false);
         }
-
-        const data = await response.json();
-        setInstructor(data.instructorDetails);
-      } catch (error) {
-        console.error("Error fetching instructor details:", error);
-      } finally {
-        setLoading(false);
       }
+
+     
     };
 
     fetchInstructorDetails();
@@ -103,7 +117,7 @@ const Navbar = ({}) => {
                 <div className="bg-[#FFEDED] p-2 rounded-full">
                   <img className="w-4 h-4" src={Logout} alt="" />
                 </div>
-                <p>Log Out</p>
+                <p onClick={Logout}>Log Out</p>
               </div>
             </div>
           )}

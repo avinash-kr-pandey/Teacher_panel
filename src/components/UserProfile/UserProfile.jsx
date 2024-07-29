@@ -5,6 +5,7 @@ import Number from "../../Assets/Icons/tpnumber.svg";
 import Bag from "../../Assets/Icons/tpbag.svg";
 import { BASE_URL } from "../../Api/api";
 import Navbar from "../Navbar/Navbar";
+import { jwtDecode } from "jwt-decode";
 
 const UserProfile = () => {
   const [instructor, setInstructor] = useState({
@@ -23,29 +24,33 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchInstructorDetails = async () => {
-      const email = "dummy@gmail.com"; // Replace with the dynamic email as needed
+      // const email = "dummy@gmail.com"; // Replace with the dynamic email as needed
       const token = localStorage.getItem("teachertoken");
-
-      try {
-        const response = await fetch(`${BASE_URL}/inst/${email}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch instructor details");
+      if(token){
+        let email=jwtDecode(token)?.email
+        try {
+          const response = await fetch(`${BASE_URL}/inst/${email}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error("Failed to fetch instructor details");
+          }
+  
+          const data = await response.json();
+          setInstructor(data?.instructorDetails);
+        } catch (error) {
+          console.error("Error fetching instructor details:", error);
+        } finally {
+          setLoading(false);
         }
-
-        const data = await response.json();
-        setInstructor(data.instructorDetails);
-      } catch (error) {
-        console.error("Error fetching instructor details:", error);
-      } finally {
-        setLoading(false);
       }
+
+     
     };
 
     fetchInstructorDetails();

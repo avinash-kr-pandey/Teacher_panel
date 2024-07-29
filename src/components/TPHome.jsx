@@ -15,7 +15,7 @@ const TPHome = () => {
     let navigate=useNavigate()
     return (<>
         {
-             !localStorage.getItem("teachertoken") ? navigate('/teacherlogin') : 
+             !localStorage.getItem("teachertoken") ? navigate('/login') : 
         <div className='flex'>
             <div className='w-[20%] h-full sticky top-0'>
                 <Sidebar onItemClick={handleSidebarItemClick} selectedComponent={selectedComponent}/>
