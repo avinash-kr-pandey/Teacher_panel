@@ -15,6 +15,7 @@ import CourseMedia from '../components/CourseMedia/CourseMedia.jsx';
 import Loginpage from '../components/LoginPage/LoginPage.jsx';
 import { AuthProvider } from '../components/contexts/AuthContext';
 import ProtectedRoute from '../components/ProtectedRoute';
+import Chat from '../components/Chat/Chat.jsx';
 
 const Router = () => {
   return (
@@ -46,6 +47,7 @@ const Router = () => {
             </Route>
             <Route path="userprofile" element={<UserProfile />} />
             <Route path="media" element={<CourseMedia />} />
+            <Route path="chat" element={<Chat/>} />
           </Route>
         </Routes>
       </BrowserRouter>

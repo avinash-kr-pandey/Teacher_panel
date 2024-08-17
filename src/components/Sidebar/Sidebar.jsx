@@ -20,7 +20,10 @@ const Sidebar = ({ onItemClick, selectedComponent }) => {
   return (
     <div className="flex flex-col justify-between h-[100vh] pb-4 ">
       <div>
-        <Link to={"/dashboard"} className="flex pl-4 w-full py-4 cursor-pointer">
+        <Link
+          to={"/dashboard"}
+          className="flex pl-4 w-full py-4 cursor-pointer"
+        >
           <img className="w-[55%]" src={Logo} alt="" />
         </Link>
         <div className="flex flex-col gap-2 px-4 w-full font-int text-[#808080] text-[14px]">
@@ -83,16 +86,14 @@ const Sidebar = ({ onItemClick, selectedComponent }) => {
             onClick={() => onItemClick("assignment")}
             className={`flex items-center gap-4 cursor-pointer px-4 py-4 rounded-lg ${
               location.pathname === "/assignment/history" ||
-              location.pathname ===
-                "/assignment/scheduledassignments"
+              location.pathname === "/assignment/scheduledassignments"
                 ? "bg-[#7F7F7F] text-white"
                 : " "
             }`}
           >
             <div>
               {location.pathname === "/assignment/history" ||
-              location.pathname ===
-                "/assignment/scheduledassignments" ? (
+              location.pathname === "/assignment/scheduledassignments" ? (
                 <img className="w-4 h-4 invert-0" src={AssignmentW} alt="" />
               ) : (
                 <img className="w-4 h-4" src={Assignment} alt="" />
@@ -124,9 +125,7 @@ const Sidebar = ({ onItemClick, selectedComponent }) => {
             to={"media"}
             onClick={() => onItemClick("media")}
             className={`flex items-center gap-4 cursor-pointer px-4 py-4 rounded-lg ${
-              location.pathname === "/media"
-                ? "bg-[#7F7F7F] text-white"
-                : " "
+              location.pathname === "/media" ? "bg-[#7F7F7F] text-white" : " "
             }`}
           >
             <div>
@@ -141,19 +140,36 @@ const Sidebar = ({ onItemClick, selectedComponent }) => {
           <div
             onClick={() => onItemClick("doubts")}
             className={`flex items-center gap-4 cursor-pointer px-4 py-4 rounded-lg ${
-              location.pathname === "/doubts"
-                ? "bg-[#7F7F7F] text-white"
-                : " "
+              location.pathname === "/doubts" ? "bg-[#7F7F7F] text-white" : " "
             }`}
           >
-            <div>
+            {/* <div>
               {location.pathname === "/doubts" ? (
                 <img className="w-4 h-4 invert-0" src={DoubtsW} alt="" />
               ) : (
                 <img className="w-4 h-4" src={Doubts} alt="" />
               )}
-            </div>
-            <p>Doubts</p>
+            </div> */}
+            <Link
+              to={"chat"}
+              onClick={() => onItemClick("chat")}
+              className={`flex items-center gap-4 cursor-pointer px-4 py-4 rounded-lg ${
+                location.pathname === "/chat" ||
+                location.pathname === "/chat"
+                  ? "bg-[#7F7F7F] text-white w-full"
+                  : " "
+              }`}
+            >
+              <div>
+                {location.pathname === "/Chat/Chat" ||
+                location.pathname === "/Chat/Chat" ? (
+                  <img className="w-4 h-4 invert-0" src={BatchW} alt="" />
+                ) : (
+                  <img className="w-4 h-4" src={Batch} alt="" />
+                )}
+              </div>
+              <p>Chat</p>
+            </Link>
           </div>
         </div>
       </div>

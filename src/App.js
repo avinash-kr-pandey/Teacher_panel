@@ -6,9 +6,9 @@ export const Globalinfo = createContext()
 function App() {
 	return (
 		<Globalinfo.Provider>
-			<div className=''>
+	
 				<Router />
-			</div>
+	
 		</Globalinfo.Provider>
 	);
 }
