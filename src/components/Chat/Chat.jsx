@@ -170,6 +170,7 @@ const Chat = () => {
             socket.off('chat message');
             socket.off('student joined');
             socket.off('student left');
+			socket.emit('leave group',{ groupId, studentId: instrutorId })
 			handleLeaveGroup();
 		};
 	}, [instrutorId]);
