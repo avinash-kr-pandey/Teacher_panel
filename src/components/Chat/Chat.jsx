@@ -112,7 +112,7 @@ const Chat = ({ data }) => {
     );
 
     if (selectedCourse && selectedCourse.lessons?.length > 0) {
-      setLessonId(selectedCourse.lessons[0]._id);
+      setLessonId(selectedCourse?.lessons[0]._id);
     } else {
       console.warn("No lessons found for this course.");
       setLessonId("");
@@ -120,7 +120,7 @@ const Chat = ({ data }) => {
   };
 
   useEffect(() => {
-    socket.emit("join group chat", groupId); // Join group chat with the generated groupId
+    socket.emit("join group chat", groupId); 
 
     socket.on("group message", (messageData) => {
       addMessage(messageData);
@@ -139,14 +139,20 @@ const Chat = ({ data }) => {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    const fetchCourses = async () => {
+  const fetchCourses = async () => {
+    try {
       const courses = await Fetchcourses();
-      setCourses(courses);
-    };
-
-    fetchCourses();
-  }, []);
+      console.log(courses); // Check the data structure
+      if (Array.isArray(courses)) {
+        setCourses(courses);
+      } else {
+        console.error("Courses data is not an array", courses);
+      }
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+    }
+  };
+  
 
   return (
     <div className="w-[28vw] h-max fixed bottom-4 right-0">
