@@ -13,7 +13,9 @@ const ClassHistory = () => {
     }
 
     fetchData();
+    console.log("jdhfjhadfjahjfhasjdf", fetchData);
   }, []); 
+
 
   return (
     <div>

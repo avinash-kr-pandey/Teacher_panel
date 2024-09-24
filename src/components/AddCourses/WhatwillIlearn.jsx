@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const WhatWillILearn = ({ initialCourse, handleInputChange }) => {
     const [course, setCourse] = useState({
         whatWillILearn: initialCourse ? initialCourse.whatWillILearn || '' : ''
     });
+
+    useEffect(() => {
+        if (initialCourse) {
+            setCourse({
+                whatWillILearn: initialCourse.whatWillILearn || ''
+            });
+        }
+    }, [initialCourse]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

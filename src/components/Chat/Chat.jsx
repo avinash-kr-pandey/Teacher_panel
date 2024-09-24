@@ -120,9 +120,9 @@ const Chat = () => {
       );
       console.log(res?.data);
       setIsChatAvailable(res?.data?.success);
-      toast.success(
-        `Chat ${res?.data?.success ? "enabled" : "disabled"} successfully.`
-      );
+      // toast.success(
+      //   `Chat ${res?.data?.success ? "enabled" : "disabled"} successfully.`
+      // );
     } catch (error) {
       toast.error("Error checking chat availability:", error);
     }
@@ -130,7 +130,7 @@ const Chat = () => {
 
   const handleCheckboxChange = async (event) => {
     const isChecked = event.target.checked;
-    await makeTeacherChatAvailable(); // Toggle chat availability
+    await makeTeacherChatAvailable();
     checkChatAvailability();
   };
 
@@ -208,8 +208,9 @@ const Chat = () => {
       <div className="w-[50%] h-full">
         <CreateLiveClassForm courses={courses} />
       </div>
-      <div className="w-[50%] h-full">
-        <div className="bg-white shadow-md rounded-lg max-w-lg w-full h-[530px] flex flex-col justify-between">
+
+      <div className="fixed bottom-0 right-0 m-4 w-[30%] h-[530px]">
+        <div className="bg-white shadow-md rounded-lg max-w-lg w-full h-full flex flex-col justify-between">
           <div className="p-4 border-b bg-green-500 text-white flex justify-between">
             <div className="flex gap-2">
               <label className="inline-flex items-center cursor-pointer">

@@ -3,7 +3,7 @@ import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { IoMdDownload } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
-import { FaFilePdf, FaVideo, FaVolumeUp } from "react-icons/fa"; // Added FaVolumeUp for audio icon
+import { FaFilePdf, FaVideo, FaVolumeUp } from "react-icons/fa";
 import "./CourseMedia.css";
 import Loader from "../Loader/Loader";
 import { IoSearchOutline } from "react-icons/io5";
@@ -19,7 +19,7 @@ const Media = ({ onImageSelect }) => {
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
   const [pdfs, setPdfs] = useState([]);
-  const [audios, setAudios] = useState([]); // State for audio files
+  const [audios, setAudios] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("images");
   const [mediaData, setMediaData] = useState([]);
@@ -49,7 +49,8 @@ const Media = ({ onImageSelect }) => {
           (media) =>
             media.url.endsWith(".jpg") ||
             media.url.endsWith(".jpeg") ||
-            media.url.endsWith(".png")
+            media.url.endsWith(".png") ||
+            media.url.endsWith(".avif")
         );
         const videoFiles = mediaData.filter((media) =>
           media.url.endsWith(".mp4")
@@ -58,7 +59,7 @@ const Media = ({ onImageSelect }) => {
           media.url.endsWith(".pdf")
         );
         const audioFiles = mediaData.filter((media) =>
-          media.url.endsWith(".mp3") // Adjust extension based on your audio file types
+          media.url.endsWith(".mp3")
         );
         setImages(imageFiles);
         setVideos(videoFiles);
@@ -114,7 +115,7 @@ const Media = ({ onImageSelect }) => {
       );
       setIsLoading(false);
       if (response.data.success) {
-        fetchData(storedToken); // Refresh data after upload
+        fetchData(storedToken);
         closeModal();
         toast.success("File Uploaded Successfully");
       } else {
@@ -147,7 +148,7 @@ const Media = ({ onImageSelect }) => {
       setIsLoading(false);
       if (response.data.success) {
         setDeleteConfirmation(null);
-        fetchData(storedToken); // Refresh data after delete
+        fetchData(storedToken);
         toast.success("Media deleted successfully.");
       } else {
         toast.error("Error deleting media.");
@@ -182,46 +183,66 @@ const Media = ({ onImageSelect }) => {
       title: "Images",
       content: (
         <div style={{ flex: 1 }}>
-          <div className="grid grid-cols-4 gap-3 justify-center overflow-x-auto mx-3">
-            {images.map((media, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center gap-2 media-item-container w-[300px] h-[300px] shadow-lg rounded-md"
-              >
-                <img
-                  src={media.url}
-                  alt={`Uploaded ${index}`}
-                  className="w-[350px] h-[200px] object-contain rounded-md"
-                  onClick={() => {
-                    if (typeof onImageSelect === "function") {
-                      onImageSelect(media.url);
-                    }
-                  }}
-                />
-                <span>{media.title}</span>
-                {/* Delete Icon */}
-                <button
-                  className="delete-icon"
-                  onClick={() => deleteMedia(media.key)}
+          <div className="grid grid-cols-5 gap-3 justify-center overflow-x-auto mx-3 ">
+            {images.map((media, index) => {
+              // Extract the filename without the extension
+              const fileNameWithPrefix = media.title.substring(
+                media.title.lastIndexOf("/") + 1,
+                media.title.lastIndexOf(".")
+              );
+
+              // Split by dash and get the part after the numeric prefix
+              const fileName =
+                fileNameWithPrefix.split("-")[1] || fileNameWithPrefix;
+
+              return (
+                <div
+                  key={index}
+                  className="flex flex-col items-center gap-2 media-item-container w-[300px] h-[300px] shadow-lg rounded-lg bg-gray-50 border-b"
                 >
-                  <MdDelete className="h-5 w-5" style={{ color: "red" }} />
-                </button>
-              </div>
-            ))}
+                  <img
+                    src={media.url}
+                    alt={`Uploaded ${index}`}
+                    className="w-[350px] h-[200px] object-contain rounded-lg shadow-sm border-b "
+                    onClick={() => {
+                      if (typeof onImageSelect === "function") {
+                        onImageSelect(media.url);
+                      }
+                    }}
+                  />
+                  <span>{fileName}</span>{" "}
+                  {/* Display the extracted file name */}
+                  {/* Delete Icon */}
+                  <button
+                    className="delete-icon"
+                    onClick={() => deleteMedia(media.key)}
+                  >
+                    <MdDelete className="h-5 w-5" style={{ color: "red" }} />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       ),
     },
+
     {
       id: "video",
       title: "Videos",
       content: (
         <div style={{ flex: 1 }} className="pl-3">
-          <div className="grid grid-cols-3 gap-3 mx-3 overflow-scroll">
+          <div className="grid grid-cols-5 gap-3 mx-3 overflow-scroll">
             {videos
               .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
               .map((media, index) => {
-                const videoName = media.title.split("/").pop(); // Extracts the file name from the path
+                const fileNameWithPrefix = media.title.substring(
+                  media.title.lastIndexOf("/") + 1,
+                  media.title.lastIndexOf(".")
+                );
+                // const videoName = media.title.split("/").pop();
+                const videoName =
+                  fileNameWithPrefix.split("-")[1] || fileNameWithPrefix;
 
                 return (
                   <div key={index} className="card">
@@ -270,10 +291,7 @@ const Media = ({ onImageSelect }) => {
                       className="delete-icon ml-auto"
                       onClick={() => deleteMedia(media.key)}
                     >
-                      <MdDelete
-                        className="h-5 w-5"
-                        style={{ color: "red" }}
-                      />
+                      <MdDelete className="h-5 w-5" style={{ color: "red" }} />
                     </button>
                   </div>
                 </div>

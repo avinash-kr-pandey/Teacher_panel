@@ -5,7 +5,10 @@ const ClassHistoryCard = ({ data}) => {
   return (
     <div className='border border-[#808080] bg-[#F6F6F6] rounded-xl px-4 py-2 mr-2 text-[#808080] font-int flex flex-col gap-3'>
       <div>
-        <p className='font-semibold text-[18px] text-[#000000]'>{data?.lesson_name}</p>
+      <p className='font-semibold text-[18px] text-[#000000]'>{data?.chapter_name}</p>
+      </div>
+      <div>
+        <p className='font-semibold text-[14px] text-[#000000]'>{data?.lesson_name}</p>
       </div>
       <p className='border border-[#80808080] w-max px-2 rounded text-[13px]'>{'batch'}</p>
       <div className='flex gap-8 items-center text-[14px]'>

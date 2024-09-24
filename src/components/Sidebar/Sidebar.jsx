@@ -102,18 +102,18 @@ const Sidebar = ({ onItemClick, selectedComponent }) => {
             <p>Assignments</p>
           </Link>
           <Link
-            to={"batch/courses"}
+            to={"batch"}
             onClick={() => onItemClick("batch")}
             className={`flex items-center gap-4 cursor-pointer px-4 py-4 rounded-lg ${
-              location.pathname === "/batch/courses" ||
-              location.pathname === "/batch/batches"
+              location.pathname === "/batch" ||
+              location.pathname === "/batch"
                 ? "bg-[#7F7F7F] text-white"
                 : " "
             }`}
           >
             <div>
-              {location.pathname === "/batch/courses" ||
-              location.pathname === "/batch/batches" ? (
+              {location.pathname === "/batch" ||
+              location.pathname === "/batch" ? (
                 <img className="w-4 h-4 invert-0" src={BatchW} alt="" />
               ) : (
                 <img className="w-4 h-4" src={Batch} alt="" />

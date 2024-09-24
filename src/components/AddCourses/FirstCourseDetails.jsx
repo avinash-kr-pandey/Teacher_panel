@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const FirstCourseDetails = () => {
+const FirstCourseDetails = ({ onDataUpdate }) => {
   const [course, setCourse] = useState({
     courseID: "",
     title: "",
@@ -14,6 +14,11 @@ const FirstCourseDetails = () => {
       [name]: value,
     });
   };
+
+  // Use useEffect to send updated course data to the parent component
+  useEffect(() => {
+    onDataUpdate(course); // Send course data to parent component
+  }, [course, onDataUpdate]);
 
   return (
     <div className="grid grid-cols-2 gap-9 gap-y-4 border border-[#808080] px-8 py-4 w-full">
@@ -50,7 +55,6 @@ const FirstCourseDetails = () => {
           placeholder="Category"
         />
       </div>
-      {/* Add more fields as needed */}
     </div>
   );
 };
