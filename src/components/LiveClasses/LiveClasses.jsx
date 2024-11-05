@@ -48,14 +48,14 @@ const LiveClasses = () => {
             Class History
           </p>
         </div>
-        <div className="flex gap-3 bg-[#F1F1F1] px-4 py-1 rounded-lg mb-2">
+        {/* <div className="flex gap-3 bg-[#F1F1F1] px-4 py-1 rounded-lg mb-2">
           <img src={Search} alt="Search" />
           <input
             className="bg-[#F1F1F1] text-[13px] w-[200px] outline-none"
             type="text"
             placeholder="Search..."
           />
-        </div>
+        </div> */}
       </div>
       <div>
         {classes === "scheduled" && <ScheduledClasses />}
